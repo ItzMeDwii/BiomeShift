@@ -171,11 +171,13 @@ regenerating so existing worlds pick up the new defaults.
 ./gradlew runServer # dev server (needs run/eula.txt)
 ```
 
-CI (`.github/workflows/build.yml`) builds and tests every push and pull request,
-and on every push to `master` it publishes
-`biomeshift-<mod>+<game>.jar` as release `v<mod>+<game>` (e.g. `v0.1.0+26.3`).
-Bump `version` in `gradle.properties` to cut a new release; re-pushing the same
+CI (`.github/workflows/build.yml`) builds and tests every push and pull request.
+On every push to `master` it tags `v<mod>+<game>` (e.g. `v0.1.0+26.3`) and
+attaches `biomeshift-<mod>+<game>.jar` as a **pre-release**; re-pushing the same
 version re-uploads the jar to the existing release instead of creating a new one.
+Bump `version` in `gradle.properties` to cut a new tag. To promote the current
+tag to a full release, run the workflow manually with `finalize: publish`
+(Actions → Build → Run workflow).
 
 ## Manual test checklist
 

@@ -5,6 +5,12 @@ on:
     branches: [master]
   pull_request:
   workflow_dispatch:
+    inputs:
+      finalize:
+        description: Promote the current version tag to a full release
+        type: choice
+        options: [leave-as-prerelease, publish]
+        default: leave-as-prerelease
 
 permissions:
   contents: read
@@ -61,7 +67,7 @@ jobs:
           path: dist
           merge-multiple: true
 
-      - name: Publish GitHub release
+      - name: Publish GitHub prerelease
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE: ${{ needs.build.outputs.release }}
@@ -72,5 +78,23 @@ jobs:
             gh release upload "$tag" "$jar" -R "$GITHUB_REPOSITORY" --clobber
           else
             gh release create "$tag" "$jar" -R "$GITHUB_REPOSITORY" \
-              --title "BiomeShift ${RELEASE}" --generate-notes
+              --title "BiomeShift ${RELEASE}" --prerelease --generate-notes
           fi
+
+  # Promote the current version to a full release: Actions -> Run workflow -> finalize=publish.
+  finalize:
+    if: github.event_name == 'workflow_dispatch' && inputs.finalize == 'publish'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Promote prerelease to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mod=$(grep -E '^version=' gradle.properties | cut -d= -f2- | tr -d '[:space:]')
+          mc=$(grep -E '^minecraft_version=' gradle.properties | cut -d= -f2- | tr -d '[:space:]')
+          gh release edit "v${mod}+${mc}" -R "$GITHUB_REPOSITORY" \
+            --prerelease=false --latest
