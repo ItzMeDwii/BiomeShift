@@ -68,8 +68,9 @@ jobs:
         run: |
           tag="v${RELEASE}"
           jar=$(ls dist/*.jar)
-          if gh release view "$tag" >/dev/null 2>&1; then
-            gh release upload "$tag" "$jar" --clobber
+          if gh release view "$tag" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$tag" "$jar" -R "$GITHUB_REPOSITORY" --clobber
           else
-            gh release create "$tag" "$jar" --title "BiomeShift ${RELEASE}" --generate-notes
+            gh release create "$tag" "$jar" -R "$GITHUB_REPOSITORY" \
+              --title "BiomeShift ${RELEASE}" --generate-notes
           fi
