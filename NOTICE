@@ -1,0 +1,15 @@
+BiomeShift
+
+This project is a Fabric port for Minecraft 26.3 inspired by, and reusing the
+biome-rewrite technique of, BiomeExpansion by Mysticpasta1:
+
+    https://github.com/Mysticpasta1/BiomeExpansion
+
+BiomeExpansion is licensed under the MIT license according to its
+`gradle.properties` (`mod_license=MIT`) and its CurseForge listing. The upstream
+repository contains no LICENSE file and names no copyright holder, so no
+upstream copyright notice could be reproduced verbatim.
+
+The trigger and scoring design are not from the original work: this mod scores
+placed blocks against per-biome signature weights instead of converting on a
+single mapped block.

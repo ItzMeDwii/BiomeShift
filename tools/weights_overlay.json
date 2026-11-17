@@ -1,0 +1,115 @@
+{
+	"minecraft:bamboo_jungle": {
+		"minecraft:jungle_planks": 3,
+		"minecraft:moss_carpet": 3
+	},
+	"minecraft:basalt_deltas": {
+		"minecraft:polished_basalt": 7,
+		"minecraft:smooth_basalt": 8
+	},
+	"minecraft:beach": {
+		"minecraft:smooth_sandstone": 4
+	},
+	"minecraft:cherry_grove": {
+		"minecraft:bee_nest": 4
+	},
+	"minecraft:crimson_forest": {
+		"minecraft:crimson_planks": 2
+	},
+	"minecraft:deep_cold_ocean": {
+		"minecraft:sea_lantern": 3
+	},
+	"minecraft:deep_frozen_ocean": {
+		"minecraft:sea_lantern": 2
+	},
+	"minecraft:deep_lukewarm_ocean": {
+		"minecraft:sea_lantern": 4
+	},
+	"minecraft:deep_ocean": {
+		"minecraft:prismarine_bricks": 6,
+		"minecraft:sea_lantern": 8
+	},
+	"minecraft:desert": {
+		"minecraft:chiseled_sandstone": 3,
+		"minecraft:smooth_sandstone": 4
+	},
+	"minecraft:dripstone_caves": {
+		"minecraft:smooth_basalt": 3
+	},
+	"minecraft:end_barrens": {
+		"minecraft:purpur_block": 2
+	},
+	"minecraft:end_highlands": {
+		"minecraft:end_stone_bricks": 3,
+		"minecraft:purpur_block": 3
+	},
+	"minecraft:end_midlands": {
+		"minecraft:purpur_block": 2
+	},
+	"minecraft:jungle": {
+		"minecraft:jungle_planks": 3,
+		"minecraft:moss_carpet": 3
+	},
+	"minecraft:lukewarm_ocean": {
+		"minecraft:sea_lantern": 4
+	},
+	"minecraft:mangrove_swamp": {
+		"minecraft:moss_carpet": 4
+	},
+	"minecraft:meadow": {
+		"minecraft:bee_nest": 4
+	},
+	"minecraft:nether_wastes": {
+		"minecraft:nether_bricks": 4,
+		"minecraft:nether_quartz_ore": 5
+	},
+	"minecraft:ocean": {
+		"minecraft:sea_lantern": 6
+	},
+	"minecraft:plains": {
+		"minecraft:hay_block": 3,
+		"minecraft:oak_fence": 2,
+		"minecraft:wheat": 4
+	},
+	"minecraft:savanna": {
+		"minecraft:acacia_planks": 4,
+		"minecraft:hay_block": 3
+	},
+	"minecraft:savanna_plateau": {
+		"minecraft:acacia_planks": 3,
+		"minecraft:hay_block": 2
+	},
+	"minecraft:small_end_islands": {
+		"minecraft:end_stone_bricks": 3
+	},
+	"minecraft:snowy_plains": {
+		"minecraft:white_wool": 1
+	},
+	"minecraft:soul_sand_valley": {
+		"minecraft:soul_torch": 3
+	},
+	"minecraft:sparse_jungle": {
+		"minecraft:moss_carpet": 2
+	},
+	"minecraft:stony_peaks": {
+		"minecraft:smooth_stone": 4
+	},
+	"minecraft:sulfur_caves": {
+		"minecraft:sulfur_bricks": 5
+	},
+	"minecraft:sunflower_plains": {
+		"minecraft:wheat": 3
+	},
+	"minecraft:the_end": {
+		"minecraft:end_stone_bricks": 5,
+		"minecraft:purpur_block": 5,
+		"minecraft:purpur_pillar": 4
+	},
+	"minecraft:the_void": {
+		"minecraft:black_concrete": 3,
+		"minecraft:glass": 2
+	},
+	"minecraft:warped_forest": {
+		"minecraft:warped_planks": 2
+	}
+}
