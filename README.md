@@ -1,5 +1,7 @@
 # BiomeShift
 
+[![Build](https://github.com/ItzMeDwii/BiomeShift/actions/workflows/build.yml/badge.svg)](https://github.com/ItzMeDwii/BiomeShift/actions/workflows/build.yml)
+
 Change any biome into any other biome by building with ordinary vanilla blocks.
 Server-side only — vanilla clients join without installing anything, and there
 are no custom blocks, items, machines or GUI.
@@ -64,7 +66,8 @@ nothing is scanned while the sapling is still standing.
 ## Install
 
 1. Install Fabric Loader 0.20.1+ on a 26.3 server.
-2. Put `biomeshift-<version>.jar` and Fabric API in `mods/`.
+2. Put `biomeshift-<mod>+<game>.jar` (e.g. `biomeshift-0.1.0+26.3.jar`, from
+   [Releases](https://github.com/ItzMeDwii/BiomeShift/releases)) and Fabric API in `mods/`.
 3. Start the server once — `config/biomeshift.json` is created with comments and
    the bundled default weights (67 vanilla biomes). The mod never rewrites an
    existing config; delete the file to regenerate it.
@@ -163,10 +166,16 @@ regenerating so existing worlds pick up the new defaults.
 ## Building
 
 ```bash
-./gradlew build     # compile + test + jar (build/libs/biomeshift-<ver>.jar)
+./gradlew build     # compile + test + jar (build/libs/biomeshift-<mod>.jar)
 ./gradlew test      # JVM-only unit tests
 ./gradlew runServer # dev server (needs run/eula.txt)
 ```
+
+CI (`.github/workflows/build.yml`) builds and tests every push and pull request,
+and on every push to `master` it publishes
+`biomeshift-<mod>+<game>.jar` as release `v<mod>+<game>` (e.g. `v0.1.0+26.3`).
+Bump `version` in `gradle.properties` to cut a new release; re-pushing the same
+version re-uploads the jar to the existing release instead of creating a new one.
 
 ## Manual test checklist
 

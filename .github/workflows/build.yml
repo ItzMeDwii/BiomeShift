@@ -1,0 +1,75 @@
+name: Build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      release: ${{ steps.versions.outputs.release }}
+      mod: ${{ steps.versions.outputs.mod }}
+      mc: ${{ steps.versions.outputs.mc }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Build and test
+        run: ./gradlew build --no-daemon
+
+      # Name the shipped jar <mod version>+<game version>, e.g. biomeshift-0.1.0+26.3.jar.
+      - name: Stamp release name
+        id: versions
+        run: |
+          mod=$(grep -E '^version=' gradle.properties | cut -d= -f2- | tr -d '[:space:]')
+          mc=$(grep -E '^minecraft_version=' gradle.properties | cut -d= -f2- | tr -d '[:space:]')
+          jar="build/libs/biomeshift-${mod}+${mc}.jar"
+          mv "build/libs/biomeshift-${mod}.jar" "$jar"
+          echo "mod=$mod" >> "$GITHUB_OUTPUT"
+          echo "mc=$mc" >> "$GITHUB_OUTPUT"
+          echo "release=${mod}+${mc}" >> "$GITHUB_OUTPUT"
+          echo "jar=$jar" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: biomeshift-${{ steps.versions.outputs.release }}
+          path: ${{ steps.versions.outputs.jar }}
+          if-no-files-found: error
+
+  release:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: biomeshift-${{ needs.build.outputs.release }}
+          path: dist
+          merge-multiple: true
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE: ${{ needs.build.outputs.release }}
+        run: |
+          tag="v${RELEASE}"
+          jar=$(ls dist/*.jar)
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release upload "$tag" "$jar" --clobber
+          else
+            gh release create "$tag" "$jar" --title "BiomeShift ${RELEASE}" --generate-notes
+          fi
