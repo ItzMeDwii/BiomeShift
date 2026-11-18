@@ -20,6 +20,8 @@ public final class Perms {
 			PermissionNode.of("biomeshift", "command.inspect");
 	public static final PermissionNode<Boolean> COMMAND_WAND =
 			PermissionNode.of("biomeshift", "command.wand");
+	public static final PermissionNode<Boolean> COMMAND_TOGGLE =
+			PermissionNode.of("biomeshift", "command.toggle");
 
 	/** Vanilla fallback: op level 2, like /gamemode and /time. */
 	public static final PermissionLevel FALLBACK = PermissionLevel.GAMEMASTERS;

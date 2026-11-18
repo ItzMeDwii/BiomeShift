@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 — unreleased
+## 0.2.0 — 2026-11-18
 
 First implementation, targeting Minecraft 26.3 / Fabric Loader 0.20.1 / Fabric API 0.166.2+26.3.
 
@@ -17,11 +17,18 @@ First implementation, targeting Minecraft 26.3 / Fabric Loader 0.20.1 / Fabric A
 - Config: `config/biomeshift.json`, created from bundled defaults for 67 vanilla
   biomes (819 weight entries over 164 blocks), reloadable with `/biomeshift reload`.
   The file is written with explanatory `//` comments on first start and never
-  rewritten afterwards; the parser is lenient, so comments survive hand-editing.
+  fully rewritten afterwards (`/biomeshift on|off` patches only the `enabled`
+  literal); the parser is lenient, so comments survive hand-editing.
 - Permissions: `/biomeshift reload` and `/biomeshift status` are gated by
   `biomeshift.command.reload` / `biomeshift.command.status` via Fabric API's
   permission API, so LuckPerms can grant or deny them; vanilla level 2 is the
   fallback when no provider answers.
+- Runtime switch: `/biomeshift on|off|toggle` (`biomeshift.command.toggle`) enables
+  or disables automatic shifting without restarting. The `enabled` flag is patched
+  in place in `config/biomeshift.json`, so the choice survives restarts while
+  hand-edited comments elsewhere in the file are untouched. `off` drops queued
+  scans and sapling polls; manual `sync`/`wand` keep working. `/biomeshift status`
+  reports the effective state.
 - Tree support: every sapling/propagule/azalea/fungus now carries a low weight in
   its tree biomes (forest 4, biome-specific saplings 3–5), so planting scores
   immediately. Planting also warms the section: one block read every

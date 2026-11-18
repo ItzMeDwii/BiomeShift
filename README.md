@@ -76,7 +76,7 @@ nothing is scanned while the sapling is still standing.
 
 | Key | Default | Meaning |
 |---|---|---|
-| `enabled` | `true` | Master switch; `false` disables all scoring without removing the mod |
+| `enabled` | `true` | Master switch; `false` disables all scoring without removing the mod. `/biomeshift on\|off` already updates this flag for you |
 | `mode` | `"threshold"` | `threshold` = score-based; `instant` = any mapped block flips the section to the biome giving that block the highest weight |
 | `threshold` | `12` | Minimum score before a biome may win a section |
 | `hysteresis` | `4` | Extra score the current biome holds, preventing flip-flop near the threshold |
@@ -101,7 +101,8 @@ lenient.
 
 | Command | Permission node | Effect |
 |---|---|---|
-| `/biomeshift reload` | `biomeshift.command.reload` | Re-read `config/biomeshift.json` without restarting (also resets baselines) |
+| `/biomeshift on` / `off` / `toggle` | `biomeshift.command.toggle` | Switch automatic biome shifting on or off without a restart. Queued scans are dropped on `off`; manual `sync`/`wand` keep working. The `enabled` flag is patched in place in `config/biomeshift.json`, so the state survives a restart |
+| `/biomeshift reload` | `biomeshift.command.reload` | Re-read `config/biomeshift.json` without restarting (also resets baselines; the reloaded `enabled` value becomes effective) |
 | `/biomeshift status` | `biomeshift.command.status` | Print loaded biome/block counts and the active mode |
 | `/biomeshift inspect` | `biomeshift.command.inspect` | Chat snapshot of the section you stand in: current biome, top three delta scores, mapped-block count, trait coverage and the would-be winner |
 | `/biomeshift inspect on\|off` | `biomeshift.command.inspect` | Toggle an action-bar overlay that refreshes the same numbers once per second |
@@ -124,6 +125,7 @@ dependency. LuckPerms sees the nodes as `namespace.path`:
 /lp group admin permission set biomeshift.command.status true
 /lp group admin permission set biomeshift.command.inspect true
 /lp group admin permission set biomeshift.command.wand true
+/lp group admin permission set biomeshift.command.toggle true
 ```
 
 Without a permission provider, all commands fall back to vanilla permission

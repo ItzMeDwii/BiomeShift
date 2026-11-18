@@ -106,6 +106,16 @@ public final class PendingSections {
 		tick = 0;
 	}
 
+	/**
+	 * Drops scans that have not run yet, keeping client resends that are already
+	 * owed for biomes written before the switch. Used when the mod is turned off.
+	 */
+	public static void dropQueued() {
+		DIRTY.clear();
+		WARM.clear();
+		SectionBaseline.clear();
+	}
+
 	public static void tick(MinecraftServer server) {
 		tick++;
 		CompiledWeights weights = BiomeShift.weights();
@@ -116,9 +126,9 @@ public final class PendingSections {
 			LAST_RESEND.entrySet().removeIf(entry -> entry.getValue() < cutoff);
 		}
 
-		if (!WARM.isEmpty()) pollWarm(server, weights);
+		if (!WARM.isEmpty() && BiomeShift.enabled()) pollWarm(server, weights);
 
-		if (!DIRTY.isEmpty() && weights.enabled()) {
+		if (!DIRTY.isEmpty() && BiomeShift.enabled()) {
 			int budget = weights.maxSectionsPerTick();
 			Iterator<Dirty> it = DIRTY.values().iterator();
 			List<Dirty> deferred = new ArrayList<>();

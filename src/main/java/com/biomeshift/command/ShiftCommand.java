@@ -29,9 +29,19 @@ public final class ShiftCommand {
 						.executes(context -> {
 							BiomeShift.reload(context.getSource().getServer());
 							context.getSource().sendSuccess(
-									() -> Component.literal("BiomeShift config reloaded"), true);
+									() -> Component.literal("BiomeShift config reloaded (automatic shifting "
+											+ (BiomeShift.enabled() ? "on" : "off") + ")"), true);
 							return 1;
 						}))
+				.then(Commands.literal("on")
+						.requires(PermissionPredicates.require(Perms.COMMAND_TOGGLE, Perms.FALLBACK))
+						.executes(context -> toggle(context.getSource(), true)))
+				.then(Commands.literal("off")
+						.requires(PermissionPredicates.require(Perms.COMMAND_TOGGLE, Perms.FALLBACK))
+						.executes(context -> toggle(context.getSource(), false)))
+				.then(Commands.literal("toggle")
+						.requires(PermissionPredicates.require(Perms.COMMAND_TOGGLE, Perms.FALLBACK))
+						.executes(context -> toggle(context.getSource(), !BiomeShift.enabled())))
 				.then(Commands.literal("status")
 						.requires(PermissionPredicates.require(Perms.COMMAND_STATUS, Perms.FALLBACK))
 						.executes(context -> {
@@ -40,7 +50,8 @@ public final class ShiftCommand {
 									? "BiomeShift: disabled (config failed to load)"
 									: "BiomeShift: " + weights.biomeCount() + " biomes, "
 											+ weights.blockCount() + " blocks, mode " + weights.mode()
-											+ ", threshold " + weights.threshold();
+											+ ", threshold " + weights.threshold()
+											+ ", automatic shifting " + (BiomeShift.enabled() ? "on" : "off");
 							context.getSource().sendSuccess(() -> Component.literal(text), false);
 							return 1;
 						}))
@@ -72,6 +83,26 @@ public final class ShiftCommand {
 				.then(Commands.literal("sync")
 						.requires(PermissionPredicates.require(Perms.COMMAND_INSPECT, Perms.FALLBACK))
 						.executes(context -> syncColumn(context.getSource()))));
+	}
+
+	/**
+	 * Switches the automatic trigger and persists {@code enabled} to the config
+	 * file. Manual tools ({@code sync}, {@code wand}) keep working.
+	 */
+	private static int toggle(CommandSourceStack source, boolean on) {
+		if (on && BiomeShift.weights() == null) {
+			source.sendFailure(Component.literal("BiomeShift: config not loaded; fix it and run /biomeshift reload"));
+			return 0;
+		}
+		boolean persisted = BiomeShift.setEnabled(on);
+		source.sendSuccess(() -> Component.literal("BiomeShift automatic shifting ")
+				.append(Component.literal(on ? "enabled" : "disabled")
+						.withStyle(on ? ChatFormatting.GREEN : ChatFormatting.RED))
+				.append(Component.literal(persisted
+						? " (saved to config/biomeshift.json)"
+						: " for this server run only (config could not be written, see log)")
+						.withStyle(ChatFormatting.GRAY)), true);
+		return 1;
 	}
 
 	/** Chat snapshot of the section the executing player stands in. */

@@ -12,11 +12,14 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** Reads {@code config/biomeshift.json}, creating it from bundled defaults on first run. */
 public final class ConfigStore {
 	public static final Path PATH = FabricLoader.getInstance().getConfigDir().resolve("biomeshift.json");
 	private static final String DEFAULTS_RESOURCE = "/biomeshift_defaults.json";
+	private static final Pattern ENABLED_PATTERN = Pattern.compile("\"enabled\"\\s*:\\s*(?:true|false)");
 	private static final Gson GSON = new GsonBuilder()
 			.setLenient()
 			.setPrettyPrinting()
@@ -46,6 +49,27 @@ public final class ConfigStore {
 	public static void save(ConfigData data) throws IOException {
 		Files.createDirectories(PATH.getParent());
 		Files.writeString(PATH, ConfigTemplate.render(data), StandardCharsets.UTF_8);
+	}
+
+	/**
+	 * Flips only the {@code enabled} flag in place, so hand-edited comments and
+	 * formatting survive; the rest of the file is never re-rendered. Falls back to
+	 * creating the file from bundled defaults when it does not exist yet.
+	 *
+	 * @return false when the file has no {@code enabled} key to patch
+	 */
+	public static boolean saveEnabled(boolean enabled) throws IOException {
+		if (!Files.exists(PATH)) {
+			ConfigData data = bundledDefaults();
+			data.enabled = enabled;
+			save(data);
+			return true;
+		}
+		String json = Files.readString(PATH, StandardCharsets.UTF_8);
+		Matcher matcher = ENABLED_PATTERN.matcher(json);
+		if (!matcher.find()) return false;
+		Files.writeString(PATH, matcher.replaceFirst("\"enabled\": " + enabled), StandardCharsets.UTF_8);
+		return true;
 	}
 
 	private static ConfigData bundledDefaults() {
